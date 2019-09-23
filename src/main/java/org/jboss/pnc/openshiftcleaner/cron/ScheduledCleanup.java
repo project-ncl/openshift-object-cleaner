@@ -23,9 +23,8 @@ public class ScheduledCleanup {
     CacheStore cacheStore;
 
     @Scheduled(every="12h")
-    void cleanup() {
+    public void cleanup() {
         String now = Instant.now().toString();
-
         for (String namespace: config.getNamespaces()) {
 
             List<String> removed = oclient.cleanResources("Service", namespace,2, config.getServiceQuery());

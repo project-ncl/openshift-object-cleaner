@@ -1,6 +1,7 @@
 package org.jboss.pnc.openshiftcleaner.rest;
 
 import org.jboss.pnc.openshiftcleaner.cache.CacheStore;
+import org.jboss.pnc.openshiftcleaner.cron.ScheduledCleanup;
 import org.jboss.pnc.openshiftcleaner.dto.Item;
 
 import javax.inject.Inject;
@@ -15,6 +16,9 @@ public class RestEndpoint {
 
     @Inject
     CacheStore cacheStore;
+
+    @Inject
+    ScheduledCleanup scheduledCleanup;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
