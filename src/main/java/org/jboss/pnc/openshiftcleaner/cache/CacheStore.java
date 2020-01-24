@@ -20,7 +20,7 @@ public class CacheStore {
     public void addItem(String date, List<String> resources) {
 
         Item item = new Item(date, resources);
-        synchronized(cache) {
+        synchronized (cache) {
             cache.add(item);
 
             if (cache.size() > CACHE_LENGTH) {
@@ -29,6 +29,7 @@ public class CacheStore {
             }
         }
     }
+
     public List<Item> getValues() {
         // don't try to provide the underlying list in case the caller is
         // naughty and tries to modify the list returned by this method

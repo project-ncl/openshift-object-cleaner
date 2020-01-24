@@ -22,12 +22,12 @@ public class ScheduledCleanup {
     @Inject
     CacheStore cacheStore;
 
-    @Scheduled(every="12h")
+    @Scheduled(every = "12h")
     public void cleanup() {
         String now = Instant.now().toString();
-        for (String namespace: config.getNamespaces()) {
+        for (String namespace : config.getNamespaces()) {
 
-            List<String> removed = oclient.cleanResources("Service", namespace,2, config.getServiceQuery());
+            List<String> removed = oclient.cleanResources("Service", namespace, 2, config.getServiceQuery());
             List<String> removedRoutes = oclient.cleanResources("Route", namespace, 2, config.getRouteQuery());
 
             removed.addAll(removedRoutes);

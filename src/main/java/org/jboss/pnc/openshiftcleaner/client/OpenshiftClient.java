@@ -28,25 +28,22 @@ public class OpenshiftClient {
     Configuration config;
 
     /**
-     * Clean items of a particular kind which matches the label query.
-     * The intervalHours is the number of hours elapsed before it is ok to remove
-     * that resource
+     * Clean items of a particular kind which matches the label query. The intervalHours is the number of hours elapsed before
+     * it is ok to remove that resource
      *
-     * @param kind         Kind of resource
-     * @param namespace    Namespace of the resources
+     * @param kind Kind of resource
+     * @param namespace Namespace of the resources
      * @param intervalDays number of hours elapsed before removing resource
-     * @param query        query to run to find resources
+     * @param query query to run to find resources
      * @return list of resources removed
      */
-    public List<String> cleanResources(String kind, String namespace,
-                                       long intervalDays, String query) {
+    public List<String> cleanResources(String kind, String namespace, long intervalDays, String query) {
 
         List<String> deletedResources = new LinkedList<>();
 
         IClient client = getClient();
 
-        List<IResource> resources = client.list(kind, namespace).stream()
-                .filter(a -> a.getName().contains(query))
+        List<IResource> resources = client.list(kind, namespace).stream().filter(a -> a.getName().contains(query))
                 .collect(Collectors.toList());
         for (IResource resource : resources) {
             Map<String, String> metadata = resource.getMetadata();
@@ -67,9 +64,7 @@ public class OpenshiftClient {
 
     private IClient getClient() {
 
-        return new ClientBuilder(config.getOpenshiftServer())
-                .usingToken(config.getToken())
-                .build();
+        return new ClientBuilder(config.getOpenshiftServer()).usingToken(config.getToken()).build();
     }
 
     /**
