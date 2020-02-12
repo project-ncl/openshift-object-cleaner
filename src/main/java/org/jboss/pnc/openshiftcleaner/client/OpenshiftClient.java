@@ -43,8 +43,10 @@ public class OpenshiftClient {
 
         IClient client = getClient();
 
-        List<IResource> resources = client.list(kind, namespace).stream().filter(a -> a.getName().contains(query))
-                .collect(Collectors.toList());
+        List<IResource> resources = client.list(kind, namespace)
+                                          .stream()
+                                          .filter(a -> a.getName().contains(query))
+                                          .collect(Collectors.toList());
         for (IResource resource : resources) {
             Map<String, String> metadata = resource.getMetadata();
 
