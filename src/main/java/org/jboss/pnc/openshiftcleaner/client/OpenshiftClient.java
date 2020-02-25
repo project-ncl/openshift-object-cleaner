@@ -28,8 +28,8 @@ public class OpenshiftClient {
     Configuration config;
 
     /**
-     * Clean items of a particular kind which matches the label query. The intervalHours is the number of hours elapsed before it is
-     * ok to remove that resource
+     * Clean items of a particular kind which matches the label query. The intervalHours is the number of hours elapsed
+     * before it is ok to remove that resource
      *
      * @param kind Kind of resource
      * @param namespace Namespace of the resources
