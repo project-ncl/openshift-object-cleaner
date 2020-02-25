@@ -28,8 +28,8 @@ public class OpenshiftClient {
     Configuration config;
 
     /**
-     * Clean items of a particular kind which matches the label query. The intervalHours is the number of hours elapsed before
-     * it is ok to remove that resource
+     * Clean items of a particular kind which matches the label query. The intervalHours is the number of hours elapsed before it is
+     * ok to remove that resource
      *
      * @param kind Kind of resource
      * @param namespace Namespace of the resources
@@ -44,9 +44,9 @@ public class OpenshiftClient {
         IClient client = getClient();
 
         List<IResource> resources = client.list(kind, namespace)
-                                          .stream()
-                                          .filter(a -> a.getName().contains(query))
-                                          .collect(Collectors.toList());
+                .stream()
+                .filter(a -> a.getName().contains(query))
+                .collect(Collectors.toList());
         for (IResource resource : resources) {
             Map<String, String> metadata = resource.getMetadata();
 

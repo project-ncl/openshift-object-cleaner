@@ -10,27 +10,22 @@ import java.util.List;
 public class Configuration {
 
     @Getter
-    @ConfigProperty(name = "openshift_server",
-                    defaultValue = "")
+    @ConfigProperty(name = "openshift_server", defaultValue = "")
     String openshiftServer;
 
     @Getter
-    @ConfigProperty(name = "namespaces",
-                    defaultValue = "")
+    @ConfigProperty(name = "namespaces", defaultValue = "")
     List<String> namespaces;
 
-    @ConfigProperty(name = "openshift_token",
-                    defaultValue = "")
+    @ConfigProperty(name = "openshift_token", defaultValue = "")
     String token;
 
     @Getter
-    @ConfigProperty(name = "service_query",
-                    defaultValue = "pnc-ba")
+    @ConfigProperty(name = "service_query", defaultValue = "pnc-ba")
     String serviceQuery;
 
     @Getter
-    @ConfigProperty(name = "route_query",
-                    defaultValue = "pnc-ba-route")
+    @ConfigProperty(name = "route_query", defaultValue = "pnc-ba-route")
     String routeQuery;
 
     public String getToken() {
