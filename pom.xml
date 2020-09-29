@@ -50,6 +50,12 @@
       <artifactId>openshift-restclient-java</artifactId>
       <version>9.0.1.Final</version>
     </dependency>
+    <!-- I think quarkus is using older okhttp3, so we have to use latest one so that openshift-restclient-java is happy -->
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.1.1</version>
+    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-scheduler</artifactId>
