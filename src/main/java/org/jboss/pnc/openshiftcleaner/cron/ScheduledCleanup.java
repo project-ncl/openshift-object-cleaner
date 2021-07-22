@@ -2,7 +2,7 @@ package org.jboss.pnc.openshiftcleaner.cron;
 
 import io.quarkus.scheduler.Scheduled;
 import org.jboss.pnc.openshiftcleaner.cache.CacheStore;
-import org.jboss.pnc.openshiftcleaner.client.OpenshiftClient;
+import org.jboss.pnc.openshiftcleaner.client.OpenshiftClientLocal;
 import org.jboss.pnc.openshiftcleaner.configuration.Configuration;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -14,7 +14,7 @@ import java.util.List;
 public class ScheduledCleanup {
 
     @Inject
-    OpenshiftClient oclient;
+    OpenshiftClientLocal oclient;
 
     @Inject
     Configuration config;
@@ -25,14 +25,12 @@ public class ScheduledCleanup {
     @Scheduled(every = "12h")
     public void cleanup() {
         String now = Instant.now().toString();
-        for (String namespace : config.getNamespaces()) {
 
-            List<String> removed = oclient.cleanResources("Service", namespace, 2, config.getServiceQuery());
-            List<String> removedRoutes = oclient.cleanResources("Route", namespace, 2, config.getRouteQuery());
+        List<String> removed = oclient.cleanServices(3, config.getServiceQuery());
+        List<String> removedRoutes = oclient.cleanRoutes(3, config.getRouteQuery());
 
-            removed.addAll(removedRoutes);
-            // cache results
-            cacheStore.addItem(now, removed);
-        }
+        removed.addAll(removedRoutes);
+        // cache results
+        cacheStore.addItem(now, removed);
     }
 }
