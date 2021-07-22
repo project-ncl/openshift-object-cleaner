@@ -37,11 +37,12 @@ public class OpenshiftClientLocal {
                 .collect(Collectors.toList());
 
         for (Service service : resources) {
+            log.info("Processing service: {}", service.getMetadata().getName());
             LocalDate dateCreated = parseTimestamp(service.getMetadata().getCreationTimestamp());
             long days = dayDuration(dateCreated);
 
             if (days > intervalDays) {
-                log.info("Deleting service: {}", service.getMetadata().getName());
+                log.info("Deleting service: {}, {} days old", service.getMetadata().getName(), days);
                 client.services().delete(service);
                 deletedResources.add("service:" + service.getMetadata().getName());
             }
@@ -62,11 +63,12 @@ public class OpenshiftClientLocal {
                 .collect(Collectors.toList());
 
         for (Route route : resources) {
+            log.info("Processing route: {}", route.getMetadata().getName());
             LocalDate dateCreated = parseTimestamp(route.getMetadata().getCreationTimestamp());
             long days = dayDuration(dateCreated);
 
             if (days > intervalDays) {
-                log.info("Deleting route: {}", route.getMetadata().getName());
+                log.info("Deleting route: {}, {} days old", route.getMetadata().getName(), days);
                 client.routes().delete(route);
                 deletedResources.add("route:" + route.getMetadata().getName());
             }
