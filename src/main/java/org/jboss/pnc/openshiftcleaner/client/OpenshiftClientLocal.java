@@ -1,5 +1,6 @@
 package org.jboss.pnc.openshiftcleaner.client;
 
+import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.client.OpenShiftClient;
@@ -71,6 +72,32 @@ public class OpenshiftClientLocal {
                 log.info("Deleting route: {}, {} days old", route.getMetadata().getName(), days);
                 client.routes().delete(route);
                 deletedResources.add("route:" + route.getMetadata().getName());
+            }
+        }
+
+        return deletedResources;
+    }
+
+    public List<String> cleanPods(long intervalDays, String query) {
+
+        List<String> deletedResources = new LinkedList<>();
+
+        List<Pod> resources = client.pods()
+                .list()
+                .getItems()
+                .stream()
+                .filter(a -> a.getMetadata().getName().contains(query))
+                .collect(Collectors.toList());
+
+        for (Pod pod : resources) {
+            log.info("Processing pod: {}", pod.getMetadata().getName());
+            LocalDate dateCreated = parseTimestamp(pod.getMetadata().getCreationTimestamp());
+            long days = dayDuration(dateCreated);
+
+            if (days > intervalDays) {
+                log.info("Deleting pod: {}, {} days old", pod.getMetadata().getName(), days);
+                client.pods().delete(pod);
+                deletedResources.add("pod:" + pod.getMetadata().getName());
             }
         }
 

@@ -15,4 +15,8 @@ public class Configuration {
     @Getter
     @ConfigProperty(name = "route_query", defaultValue = "pnc-ba-route")
     String routeQuery;
+
+    @Getter
+    @ConfigProperty(name = "pod_query", defaultValue = "pnc-ba-pod")
+    String podQuery;
 }

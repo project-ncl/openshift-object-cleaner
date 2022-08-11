@@ -28,6 +28,7 @@ public class ScheduledCleanup {
 
         List<String> removed = oclient.cleanServices(3, config.getServiceQuery());
         List<String> removedRoutes = oclient.cleanRoutes(3, config.getRouteQuery());
+        List<String> removedPods = oclient.cleanPods(3, config.getPodQuery());
 
         removed.addAll(removedRoutes);
         // cache results
