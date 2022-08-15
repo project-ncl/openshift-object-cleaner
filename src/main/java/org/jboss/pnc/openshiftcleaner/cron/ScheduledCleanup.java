@@ -26,8 +26,11 @@ public class ScheduledCleanup {
 
     @Scheduled(every = "12h")
     public void cleanup() {
+        log.error("-------------");
         log.info("Namespace: " + config.getNamespace());
         log.info("Url: " + config.getMasterUrl());
+        log.error("-------------");
+
         String now = Instant.now().toString();
 
         List<String> removed = oclient.cleanServices(3, config.getServiceQuery());
