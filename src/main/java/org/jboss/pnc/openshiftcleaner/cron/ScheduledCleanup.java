@@ -26,10 +26,6 @@ public class ScheduledCleanup {
 
     @Scheduled(every = "12h")
     public void cleanup() {
-        log.error("-------------");
-        log.info("Namespace: " + config.getNamespace());
-        log.info("Url: " + config.getMasterUrl());
-        log.error("-------------");
 
         String now = Instant.now().toString();
 
@@ -38,6 +34,7 @@ public class ScheduledCleanup {
         List<String> removedPods = oclient.cleanPods(3, config.getPodQuery());
 
         removed.addAll(removedRoutes);
+        removed.addAll(removedPods);
         // cache results
         cacheStore.addItem(now, removed);
     }

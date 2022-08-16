@@ -19,12 +19,4 @@ public class Configuration {
     @Getter
     @ConfigProperty(name = "pod_query", defaultValue = "pnc-ba-pod")
     String podQuery;
-
-    @Getter
-    @ConfigProperty(name = "quarkus.kubernetes-client.master-url")
-    String masterUrl;
-
-    @Getter
-    @ConfigProperty(name = "quarkus.kubernetes-client.namespace")
-    String namespace;
 }
