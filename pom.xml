@@ -64,6 +64,12 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy-jsonb</artifactId>
     </dependency>
+    <!-- OTEL dependencies !-->
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-opentelemetry</artifactId>
+    </dependency>
+    <!-- OTEL dependencies END !-->
   </dependencies>
   <build>
     <plugins>
