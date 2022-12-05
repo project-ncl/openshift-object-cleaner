@@ -1,5 +1,6 @@
 package org.jboss.pnc.openshiftcleaner.cron;
 
+import io.opentelemetry.instrumentation.annotations.WithSpan;
 import io.quarkus.scheduler.Scheduled;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.pnc.openshiftcleaner.cache.CacheStore;
@@ -25,6 +26,7 @@ public class ScheduledCleanup {
     CacheStore cacheStore;
 
     @Scheduled(every = "12h")
+    @WithSpan
     public void cleanup() {
 
         String now = Instant.now().toString();

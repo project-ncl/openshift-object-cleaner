@@ -4,10 +4,18 @@ import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.client.OpenShiftClient;
+import io.opentelemetry.api.GlobalOpenTelemetry;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.SpanBuilder;
+import io.opentelemetry.api.trace.SpanKind;
+import io.opentelemetry.context.Scope;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+
+import org.jboss.pnc.common.otel.OtelUtils;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,6 +23,7 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -28,80 +37,140 @@ public class OpenshiftClientLocal {
 
     public List<String> cleanServices(long intervalDays, String query) {
 
-        List<String> deletedResources = new LinkedList<>();
+        // Create a parent child span with values from MDC
+        SpanBuilder spanBuilder = OtelUtils.buildChildSpan(
+                GlobalOpenTelemetry.get().getTracer(""),
+                "OpenshiftClientLocal.cleanServices",
+                SpanKind.CLIENT,
+                null,
+                null,
+                null,
+                null,
+                Span.current().getSpanContext(),
+                Map.of("intervalDays", String.valueOf(intervalDays), "query", query));
 
-        List<Service> resources = client.services()
-                .list()
-                .getItems()
-                .stream()
-                .filter(a -> a.getMetadata().getName().contains(query))
-                .collect(Collectors.toList());
+        Span span = spanBuilder.startSpan();
+        log.debug("Started a new span :{}", span);
 
-        for (Service service : resources) {
-            log.info("Processing service: {}", service.getMetadata().getName());
-            LocalDate dateCreated = parseTimestamp(service.getMetadata().getCreationTimestamp());
-            long days = dayDuration(dateCreated);
+        // put the span into the current Context
+        try (Scope scope = span.makeCurrent()) {
 
-            if (days > intervalDays) {
-                log.info("Deleting service: {}, {} days old", service.getMetadata().getName(), days);
-                client.services().delete(service);
-                deletedResources.add("service:" + service.getMetadata().getName());
+            List<String> deletedResources = new LinkedList<>();
+
+            List<Service> resources = client.services()
+                    .list()
+                    .getItems()
+                    .stream()
+                    .filter(a -> a.getMetadata().getName().contains(query))
+                    .collect(Collectors.toList());
+
+            for (Service service : resources) {
+                log.info("Processing service: {}", service.getMetadata().getName());
+                LocalDate dateCreated = parseTimestamp(service.getMetadata().getCreationTimestamp());
+                long days = dayDuration(dateCreated);
+
+                if (days > intervalDays) {
+                    log.info("Deleting service: {}, {} days old", service.getMetadata().getName(), days);
+                    client.services().delete(service);
+                    deletedResources.add("service:" + service.getMetadata().getName());
+                }
             }
-        }
 
-        return deletedResources;
+            return deletedResources;
+        } finally {
+            span.end(); // closing the scope does not end the span, this has to be done manually
+        }
     }
 
     public List<String> cleanRoutes(long intervalDays, String query) {
 
-        List<String> deletedResources = new LinkedList<>();
+        // Create a parent child span with values from MDC
+        SpanBuilder spanBuilder = OtelUtils.buildChildSpan(
+                GlobalOpenTelemetry.get().getTracer(""),
+                "OpenshiftClientLocal.cleanRoutes",
+                SpanKind.CLIENT,
+                null,
+                null,
+                null,
+                null,
+                Span.current().getSpanContext(),
+                Map.of("intervalDays", String.valueOf(intervalDays), "query", query));
 
-        List<Route> resources = client.routes()
-                .list()
-                .getItems()
-                .stream()
-                .filter(a -> a.getMetadata().getName().contains(query))
-                .collect(Collectors.toList());
+        Span span = spanBuilder.startSpan();
+        log.debug("Started a new span :{}", span);
 
-        for (Route route : resources) {
-            log.info("Processing route: {}", route.getMetadata().getName());
-            LocalDate dateCreated = parseTimestamp(route.getMetadata().getCreationTimestamp());
-            long days = dayDuration(dateCreated);
+        // put the span into the current Context
+        try (Scope scope = span.makeCurrent()) {
+            List<String> deletedResources = new LinkedList<>();
 
-            if (days > intervalDays) {
-                log.info("Deleting route: {}, {} days old", route.getMetadata().getName(), days);
-                client.routes().delete(route);
-                deletedResources.add("route:" + route.getMetadata().getName());
+            List<Route> resources = client.routes()
+                    .list()
+                    .getItems()
+                    .stream()
+                    .filter(a -> a.getMetadata().getName().contains(query))
+                    .collect(Collectors.toList());
+
+            for (Route route : resources) {
+                log.info("Processing route: {}", route.getMetadata().getName());
+                LocalDate dateCreated = parseTimestamp(route.getMetadata().getCreationTimestamp());
+                long days = dayDuration(dateCreated);
+
+                if (days > intervalDays) {
+                    log.info("Deleting route: {}, {} days old", route.getMetadata().getName(), days);
+                    client.routes().delete(route);
+                    deletedResources.add("route:" + route.getMetadata().getName());
+                }
             }
-        }
 
-        return deletedResources;
+            return deletedResources;
+        } finally {
+            span.end(); // closing the scope does not end the span, this has to be done manually
+        }
     }
 
     public List<String> cleanPods(long intervalDays, String query) {
+        // Create a parent child span with values from MDC
+        SpanBuilder spanBuilder = OtelUtils.buildChildSpan(
+                GlobalOpenTelemetry.get().getTracer(""),
+                "OpenshiftClientLocal.cleanPods",
+                SpanKind.CLIENT,
+                null,
+                null,
+                null,
+                null,
+                Span.current().getSpanContext(),
+                Map.of("intervalDays", String.valueOf(intervalDays), "query", query));
 
-        List<String> deletedResources = new LinkedList<>();
+        Span span = spanBuilder.startSpan();
+        log.debug("Started a new span :{}", span);
 
-        List<Pod> resources = client.pods()
-                .list()
-                .getItems()
-                .stream()
-                .filter(a -> a.getMetadata().getName().contains(query))
-                .collect(Collectors.toList());
+        // put the span into the current Context
+        try (Scope scope = span.makeCurrent()) {
+            List<String> deletedResources = new LinkedList<>();
 
-        for (Pod pod : resources) {
-            log.info("Processing pod: {}", pod.getMetadata().getName());
-            LocalDate dateCreated = parseTimestamp(pod.getMetadata().getCreationTimestamp());
-            long days = dayDuration(dateCreated);
+            List<Pod> resources = client.pods()
+                    .list()
+                    .getItems()
+                    .stream()
+                    .filter(a -> a.getMetadata().getName().contains(query))
+                    .collect(Collectors.toList());
 
-            if (days > intervalDays) {
-                log.info("Deleting pod: {}, {} days old", pod.getMetadata().getName(), days);
-                client.pods().delete(pod);
-                deletedResources.add("pod:" + pod.getMetadata().getName());
+            for (Pod pod : resources) {
+                log.info("Processing pod: {}", pod.getMetadata().getName());
+                LocalDate dateCreated = parseTimestamp(pod.getMetadata().getCreationTimestamp());
+                long days = dayDuration(dateCreated);
+
+                if (days > intervalDays) {
+                    log.info("Deleting pod: {}, {} days old", pod.getMetadata().getName(), days);
+                    client.pods().delete(pod);
+                    deletedResources.add("pod:" + pod.getMetadata().getName());
+                }
             }
-        }
 
-        return deletedResources;
+            return deletedResources;
+        } finally {
+            span.end(); // closing the scope does not end the span, this has to be done manually
+        }
     }
 
     /**
