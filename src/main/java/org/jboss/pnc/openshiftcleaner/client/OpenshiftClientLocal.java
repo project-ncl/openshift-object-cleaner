@@ -7,14 +7,14 @@ import io.fabric8.openshift.client.OpenShiftClient;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.SpanBuilder;
+import io.opentelemetry.api.trace.SpanContext;
 import io.opentelemetry.api.trace.SpanKind;
+import io.opentelemetry.context.Context;
 import io.opentelemetry.context.Scope;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-
-import org.jboss.pnc.common.otel.OtelUtils;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -23,7 +23,6 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -37,17 +36,18 @@ public class OpenshiftClientLocal {
 
     public List<String> cleanServices(long intervalDays, String query) {
 
-        // Create a parent child span with values from MDC
-        SpanBuilder spanBuilder = OtelUtils.buildChildSpan(
-                GlobalOpenTelemetry.get().getTracer(""),
-                "OpenshiftClientLocal.cleanServices",
-                SpanKind.CLIENT,
-                null,
-                null,
-                null,
-                null,
-                Span.current().getSpanContext(),
-                Map.of("intervalDays", String.valueOf(intervalDays), "query", query));
+        SpanContext currSpanContext = Span.current().getSpanContext();
+        SpanContext parenSpanContext = SpanContext.create(
+                currSpanContext.getTraceId(),
+                currSpanContext.getSpanId(),
+                currSpanContext.getTraceFlags(),
+                currSpanContext.getTraceState());
+        SpanBuilder spanBuilder = GlobalOpenTelemetry.get()
+                .getTracer("")
+                .spanBuilder("OpenshiftClientLocal.cleanServices")
+                .setParent(Context.current().with(Span.wrap(parenSpanContext)))
+                .setSpanKind(SpanKind.CLIENT);
+        spanBuilder.setAttribute("intervalDays", intervalDays).setAttribute("query", query);
 
         Span span = spanBuilder.startSpan();
         log.debug("Started a new span :{}", span);
@@ -84,17 +84,18 @@ public class OpenshiftClientLocal {
 
     public List<String> cleanRoutes(long intervalDays, String query) {
 
-        // Create a parent child span with values from MDC
-        SpanBuilder spanBuilder = OtelUtils.buildChildSpan(
-                GlobalOpenTelemetry.get().getTracer(""),
-                "OpenshiftClientLocal.cleanRoutes",
-                SpanKind.CLIENT,
-                null,
-                null,
-                null,
-                null,
-                Span.current().getSpanContext(),
-                Map.of("intervalDays", String.valueOf(intervalDays), "query", query));
+        SpanContext currSpanContext = Span.current().getSpanContext();
+        SpanContext parenSpanContext = SpanContext.create(
+                currSpanContext.getTraceId(),
+                currSpanContext.getSpanId(),
+                currSpanContext.getTraceFlags(),
+                currSpanContext.getTraceState());
+        SpanBuilder spanBuilder = GlobalOpenTelemetry.get()
+                .getTracer("")
+                .spanBuilder("OpenshiftClientLocal.cleanRoutes")
+                .setParent(Context.current().with(Span.wrap(parenSpanContext)))
+                .setSpanKind(SpanKind.CLIENT);
+        spanBuilder.setAttribute("intervalDays", intervalDays).setAttribute("query", query);
 
         Span span = spanBuilder.startSpan();
         log.debug("Started a new span :{}", span);
@@ -129,17 +130,19 @@ public class OpenshiftClientLocal {
     }
 
     public List<String> cleanPods(long intervalDays, String query) {
-        // Create a parent child span with values from MDC
-        SpanBuilder spanBuilder = OtelUtils.buildChildSpan(
-                GlobalOpenTelemetry.get().getTracer(""),
-                "OpenshiftClientLocal.cleanPods",
-                SpanKind.CLIENT,
-                null,
-                null,
-                null,
-                null,
-                Span.current().getSpanContext(),
-                Map.of("intervalDays", String.valueOf(intervalDays), "query", query));
+
+        SpanContext currSpanContext = Span.current().getSpanContext();
+        SpanContext parenSpanContext = SpanContext.create(
+                currSpanContext.getTraceId(),
+                currSpanContext.getSpanId(),
+                currSpanContext.getTraceFlags(),
+                currSpanContext.getTraceState());
+        SpanBuilder spanBuilder = GlobalOpenTelemetry.get()
+                .getTracer("")
+                .spanBuilder("OpenshiftClientLocal.cleanPods")
+                .setParent(Context.current().with(Span.wrap(parenSpanContext)))
+                .setSpanKind(SpanKind.CLIENT);
+        spanBuilder.setAttribute("intervalDays", intervalDays).setAttribute("query", query);
 
         Span span = spanBuilder.startSpan();
         log.debug("Started a new span :{}", span);
