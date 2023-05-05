@@ -13,8 +13,8 @@ import io.opentelemetry.context.Context;
 import io.opentelemetry.context.Scope;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.time.Instant;
 import java.time.LocalDate;

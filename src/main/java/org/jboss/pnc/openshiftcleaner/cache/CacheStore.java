@@ -2,7 +2,7 @@ package org.jboss.pnc.openshiftcleaner.cache;
 
 import org.jboss.pnc.openshiftcleaner.dto.Item;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.util.LinkedList;
 import java.util.List;
 

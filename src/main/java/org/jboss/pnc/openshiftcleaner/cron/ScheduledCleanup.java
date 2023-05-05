@@ -7,8 +7,8 @@ import org.jboss.pnc.openshiftcleaner.cache.CacheStore;
 import org.jboss.pnc.openshiftcleaner.client.OpenshiftClientLocal;
 import org.jboss.pnc.openshiftcleaner.configuration.Configuration;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.time.Instant;
 import java.util.List;
 
