@@ -1,9 +1,10 @@
 package org.jboss.pnc.openshiftcleaner.configuration;
 
-import lombok.Getter;
+import jakarta.enterprise.context.ApplicationScoped;
+
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import lombok.Getter;
 
 @ApplicationScoped
 public class Configuration {

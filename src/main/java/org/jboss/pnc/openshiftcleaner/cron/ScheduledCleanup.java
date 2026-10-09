@@ -1,16 +1,18 @@
 package org.jboss.pnc.openshiftcleaner.cron;
 
-import io.opentelemetry.instrumentation.annotations.WithSpan;
-import io.quarkus.scheduler.Scheduled;
-import lombok.extern.slf4j.Slf4j;
+import java.time.Instant;
+import java.util.List;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
 import org.jboss.pnc.openshiftcleaner.cache.CacheStore;
 import org.jboss.pnc.openshiftcleaner.client.OpenshiftClientLocal;
 import org.jboss.pnc.openshiftcleaner.configuration.Configuration;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
-import java.time.Instant;
-import java.util.List;
+import io.opentelemetry.instrumentation.annotations.WithSpan;
+import io.quarkus.scheduler.Scheduled;
+import lombok.extern.slf4j.Slf4j;
 
 @ApplicationScoped
 @Slf4j
