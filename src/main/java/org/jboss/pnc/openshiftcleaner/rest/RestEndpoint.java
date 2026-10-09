@@ -1,15 +1,16 @@
 package org.jboss.pnc.openshiftcleaner.rest;
 
-import org.jboss.pnc.openshiftcleaner.cache.CacheStore;
-import org.jboss.pnc.openshiftcleaner.cron.ScheduledCleanup;
-import org.jboss.pnc.openshiftcleaner.dto.Item;
+import java.util.List;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import java.util.List;
+
+import org.jboss.pnc.openshiftcleaner.cache.CacheStore;
+import org.jboss.pnc.openshiftcleaner.cron.ScheduledCleanup;
+import org.jboss.pnc.openshiftcleaner.dto.Item;
 
 @Path("/info")
 public class RestEndpoint {
